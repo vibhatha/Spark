@@ -17,7 +17,7 @@ object GenerateMatrix {
       val rows = args(0).toInt
       val columns = args(1).toInt
       val filename = args(2)
-      generateSequenceAndSave(rows, columns, filename)
+      generateSequenceAndSave1(rows, columns, filename)
     }
 
   }
@@ -56,6 +56,39 @@ object GenerateMatrix {
       }
       println(matrixString)
       WriteText.saveFile(filename, matrixString)
+
+  }
+
+  def generateSequenceAndSave1(rows : Int, columns : Int, filename: String){
+    println("Rows : "+ rows+", Columns : "+columns+" Filename : "+filename)
+    var matrixString = ""
+    try {
+      val file = new File(filename)
+      file.createNewFile();
+      for(i <- 0 to rows-1){
+        matrixString = ""
+        var index = i
+        var line = ""
+        for(j <- 0 to columns-1){
+          val num= Random.nextDouble()
+          line+=num.toString+" "
+        }
+        val matrixIndex = index.toString
+        line = matrixIndex+"," + line
+        matrixString+=line
+        matrixString+="\n"
+        val fw = (new FileWriter(file,true))
+        fw.write(matrixString)
+        fw.close()
+      }
+
+    }catch {
+    case e : IOException => e.getMessage
+      e.printStackTrace()
+   }
+
+    println(matrixString)
+    //WriteText.saveFile(filename, matrixString)
 
   }
 

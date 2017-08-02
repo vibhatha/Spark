@@ -19,7 +19,8 @@ object ExpPCA {
       println("Spark PCA")
       val conf = new SparkConf().setAppName("My App")
       val sc = new SparkContext(conf)
-      val data = sc.textFile("file:"+filename).map { line =>
+      val start_time = System.currentTimeMills()	      
+	val data = sc.textFile("file:"+filename).map { line =>
         val parts = line.split(',')
         LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))
       }.cache()

@@ -4,6 +4,8 @@ package edu.indiana.ise.spidal.mlr
   * Created by vibhatha on 7/31/17.
   */
 
+import com.sun.javafx.tk.Toolkit.WritableImageAccessor
+import edu.indiana.ise.spidal.util.WriteText
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
@@ -17,15 +19,17 @@ object ExpMLR {
   def main(args: Array[String]){
 
 
-    if(args.length!=3){
+    if(args.length!=4){
       ///home/vibhatha/ds/data/pca/matrix4
       println("Incorrect Argument format")
-      println("sh exp.sh <data_file_path> <num_iterations> <output_path>")
-      println("sh exp.sh /home/data/matrix0")
+      println("sh exp.sh <data_file_path> <num_iterations> <output_path> <threads>")
+      println("sh exp.sh /home/data/matrix0 100 /home/output/data1 1")
     }else{
       val filename=args(0)
       val iterations = args(1).toInt
       val output = args(2)
+      val threads = args(3).toInt
+
       println("Spark PCA")
       val conf = new SparkConf().setAppName("ExpMLR - Linear Regression Benchmarking")
       val sc = new SparkContext(conf)
@@ -61,10 +65,16 @@ object ExpMLR {
       //model.save(sc, "file:"+output+"_"+System.currentTimeMillis().toString)
       //val sameModel = SVMModel.load(sc, "file:"+output+"_"+System.currentTimeMillis().toString)
       val end_time = System.currentTimeMillis();
-      val elapsed_time = end_time - start_time
+      val elapsed_time = (end_time - start_time)/1000.0
       println("======================================")
       println("Time Elapsed : "+elapsed_time+" s")
       println("======================================")
+      val outputData = "Matrix : "+filename+"\n";
+      val itr = "Iterations : "+iterations.toString+"\n"
+      val thd = "Threads : "+threads.toString+"\n"
+      val eta = "Execution Time : "+elapsed_time.toString+"\n"
+      val final_record = outputData+itr+thd+eta
+      WriteText.saveFile(output, final_record);
     }
 
 

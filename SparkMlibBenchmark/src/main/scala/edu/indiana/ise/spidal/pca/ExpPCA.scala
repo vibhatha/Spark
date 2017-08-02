@@ -28,7 +28,7 @@ object ExpPCA {
       val splits = data.randomSplit(Array(0.8, 0.2), seed = 11L)
       val training = splits(0).cache()
       val test = splits(1)
-      val start_time = System.currentTimeMillis();
+      //val start_time = System.currentTimeMillis();
       val pca = new PCA(training.first().features.size / 2).fit(data.map(_.features))
       val training_pca = training.map(p => p.copy(features = pca.transform(p.features)))
       val end_time = System.currentTimeMillis();

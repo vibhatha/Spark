@@ -19,7 +19,7 @@ object ExpPCA {
       println("Spark PCA")
       val conf = new SparkConf().setAppName("My App")
       val sc = new SparkContext(conf)
-      val start_time = System.currentTimeMills()	      
+      val start_time = System.currentTimeMillis()	      
 	val data = sc.textFile("file:"+filename).map { line =>
         val parts = line.split(',')
         LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))

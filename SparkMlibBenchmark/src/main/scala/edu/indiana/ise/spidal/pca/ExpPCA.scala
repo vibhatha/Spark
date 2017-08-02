@@ -17,8 +17,6 @@ object ExpPCA {
     }else{
       val filename=args(0)
       println("Spark PCA")
-      println("Spark PCA Custom Configurations")
-      val start_time = System.currentTimeMillis();
       val conf = new SparkConf().setAppName("My App")
       val sc = new SparkContext(conf)
       val data = sc.textFile("file:"+filename).map { line =>
@@ -29,6 +27,7 @@ object ExpPCA {
       val splits = data.randomSplit(Array(0.8, 0.2), seed = 11L)
       val training = splits(0).cache()
       val test = splits(1)
+      val start_time = System.currentTimeMillis();
       val pca = new PCA(training.first().features.size / 2).fit(data.map(_.features))
       val training_pca = training.map(p => p.copy(features = pca.transform(p.features)))
       val end_time = System.currentTimeMillis();
@@ -36,6 +35,9 @@ object ExpPCA {
       val test_pca = test.map(p => p.copy(features = pca.transform(p.features)))
       val arr1 : Array[LabeledPoint] = training_pca.collect()
       var a = 0
+      //for(a <- 0 to arr1.length-1){
+      //  println(arr1(a));
+      //}
       println("======================================")
       println("Time Elapsed : "+elapsed_time+" s")
       println("======================================")

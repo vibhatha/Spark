@@ -57,8 +57,9 @@ object ExpPCA {
       val outputData = "Matrix : "+filename+"\n"
       val itr = "Principal Components : "+principalComponents.toString+"\n"
       val thd = "Threads : "+threads.toString+"\n"
-      val eta = "Execution Time : "+elapsed_time.toString+"\n"
-      val final_record = outputData+itr+thd+eta
+      val eta = "Training Time : "+elapsed_time.toString+"\n"
+      val ld_eta = "Data Loading Time : "+data_loading_time.toString+"\n"
+      val final_record = outputData+itr+thd+ld_eta+eta
       WriteText.saveFile(output, final_record);
 
     }

@@ -22,10 +22,17 @@ object ExpPCA {
       println("Spark PCA")
       val conf = new SparkConf().setAppName("My App")
       val sc = new SparkContext(conf)
+      val start_data_loading = System.currentTimeMillis()
+      val load_data = sc.textFile("file:"+filename).count()
+      val end_data_loading = System.currentTimeMillis()
+      val data_loading_time = end_data_loading - start_data_loading
+
       val data = sc.textFile("file:"+filename).map { line =>
         val parts = line.split(',')
         LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))
       }.cache()
+
+
 
       val splits = data.randomSplit(Array(0.99, 0.01), seed = 11L)
       val training = splits(0).cache()
@@ -43,7 +50,8 @@ object ExpPCA {
       //  println(arr1(a));
       //}
       println("======================================")
-      println("Time Elapsed : "+elapsed_time+" s")
+      println("Data Loading Time : "+data_loading_time)
+      println("Training Time : "+elapsed_time+" s")
       println("======================================")
 
       val outputData = "Matrix : "+filename+"\n"

@@ -4,7 +4,7 @@
 		module="sparkmlibbenchmark-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20170716112906"
+		publication="20170720160556"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>

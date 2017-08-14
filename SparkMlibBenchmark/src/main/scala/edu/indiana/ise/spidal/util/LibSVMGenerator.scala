@@ -30,9 +30,6 @@ object LibSVMGenerator {
       val features = args(2).toInt
       val output = args(3)
       generateSequenceAndSave1(classes, samples, features, output)
-
-
-
   }
 
 

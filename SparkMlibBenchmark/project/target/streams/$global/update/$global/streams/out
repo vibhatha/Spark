@@ -1,4 +1,4 @@
-[0m[[0minfo[0m] [0mUpdating {file:/home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/}sparkmlibbenchmark-build...[0m
+[0m[[0minfo[0m] [0mUpdating {file:/N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/}sparkmlibbenchmark-build...[0m
 [0m[[0mdebug[0m] [0m:: resolving dependencies :: default#sparkmlibbenchmark-build;0.1-SNAPSHOT[0m
 [0m[[0mdebug[0m] [0m	confs: [compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool][0m
 [0m[[0mdebug[0m] [0m	validate = true[0m
@@ -6009,19 +6009,19 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-sbt#template-resolver;0.1!template-resolver.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#jline;2.10.6!jline.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 954ms :: artifacts dl 26ms[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT compile produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-compile.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT runtime produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-runtime.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT test produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-test.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT provided produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-provided.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT optional produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-optional.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT compile-internal produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-compile-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT runtime-internal produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-runtime-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT test-internal produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-test-internal.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT plugin produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-plugin.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT sources produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-sources.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT docs produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-docs.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT pom produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-pom.xml[0m
-[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT scala-tool produced in /home/vibhatha/ds/spark/SparkApp/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (954ms resolve - 26ms download)[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 2451ms :: artifacts dl 87ms[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT compile produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-compile.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT runtime produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-runtime.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT test produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-test.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT provided produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-provided.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT optional produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-optional.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT compile-internal produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-compile-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT runtime-internal produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-runtime-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT test-internal produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-test-internal.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT plugin produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-plugin.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT sources produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-sources.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT docs produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-docs.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT pom produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-pom.xml[0m
+[0m[[0mdebug[0m] [0m	report for default#sparkmlibbenchmark-build;0.1-SNAPSHOT scala-tool produced in /N/u/vlabeyko/ds/spark/SparkApps/Spark/SparkMlibBenchmark/project/target/resolution-cache/reports/default-sparkmlibbenchmark-build-scala-tool.xml[0m
+[0m[[0mdebug[0m] [0m	resolve done (2451ms resolve - 87ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m

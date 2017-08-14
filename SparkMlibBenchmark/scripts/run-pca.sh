@@ -1,5 +1,7 @@
-sh exp.sh /N/u/vlabeyko/data/pca-spark/dataset/mat_5M_300 1
-sh exp.sh /N/u/vlabeyko/data/pca-spark/dataset/mat_5M_300 8
-sh exp.sh /N/u/vlabeyko/data/pca-spark/dataset/mat_5M_300 16
-sh exp.sh /N/u/vlabeyko/data/pca-spark/dataset/mat_5M_300 32
-sh exp.sh /N/u/vlabeyko/data/pca-spark/dataset/mat_5M_300 64
+Id=$1
+#sh scripts/exp.sh mat_100K_300F 1 ${Id}
+sh scripts/exp.sh mat_5M_300 1 ${Id}
+sh scripts/exp.sh mat_5M_300 8 ${Id}
+sh scripts/exp.sh mat_5M_300 16 ${Id}
+sh scripts/exp.sh mat_5M_300 32 ${Id}
+sh scripts/exp.sh mat_5M_300 64 ${Id}

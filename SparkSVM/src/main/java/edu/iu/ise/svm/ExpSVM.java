@@ -15,7 +15,14 @@ import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.mllib.regression.LabeledPoint;
 import org.apache.spark.mllib.util.MLUtils;
 import scala.Tuple2;
-
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -23,14 +30,28 @@ import java.util.*;
 
 public class ExpSVM {
 
+    private static final Logger log = Logger.getLogger(ExpSVM.class.getName());
+    private String[] args = null;
+    private static Options options = new Options();
+
     public static void main(String [] args) throws IOException {
         long start_time = System.currentTimeMillis();
         System.out.println("Hello Spark");
         SparkConf conf = new SparkConf().setAppName("Simple Application");
         SparkContext sc = new SparkContext(conf);
+
+        init(args);
+        CommandLine cmd = parse(args);
+        String trainingDataSet = cmd.getOptionValue("train");
+        String testingDataSet = cmd.getOptionValue("test");
+        task(sc, trainingDataSet, testingDataSet);
+
+    }
+
+    public static void task(SparkContext sc, String trainingDataSet, String testingDataSet) throws IOException {
         String datasource = "ijcnn1";
-        String path = "file:/home/vibhatha/data/libsvm/"+datasource+"/"+datasource+"_train"; //"file:/home/vibhatha/data/sparksvm/ijcnn1/ijcnn1_train_spark.txt";
-        String test_path = "file:/home/vibhatha/data/libsvm/"+datasource+"/"+datasource+"_test";
+        String path = "file:"+trainingDataSet; //"file:/home/vibhatha/data/sparksvm/ijcnn1/ijcnn1_train_spark.txt";
+        String test_path = "file:"+testingDataSet;
         JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, path).toJavaRDD();
         JavaRDD<LabeledPoint> testdata = MLUtils.loadLibSVMFile(sc, test_path).toJavaRDD();
 
@@ -153,5 +174,58 @@ public class ExpSVM {
 
         });
     }
+
+
+    public static void init(String[] args) {
+
+        options.addOption("h", "help", false, "show help.");
+        options.addOption("train", "training data set path", true, "Set training data set .");
+        options.addOption("test", "testing data set path", true, "Set testing data set .");
+
+    }
+
+    public static CommandLine parse(String [] args) {
+        CommandLineParser parser = new BasicParser();
+
+        CommandLine cmd = null;
+        try {
+            cmd = parser.parse(options, args);
+
+            if (cmd.hasOption("h"))
+                help();
+
+            if (cmd.hasOption("train")) {
+                log.log(Level.INFO, "Training data set -train=" + cmd.getOptionValue("train"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -train option");
+                help();
+            }
+
+            if (cmd.hasOption("test")) {
+                log.log(Level.INFO, "Testing data set -test=" + cmd.getOptionValue("test"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -test option");
+                help();
+            }
+
+        } catch (ParseException e) {
+            log.log(Level.SEVERE, "Failed to parse comand line properties", e);
+            help();
+        }
+
+        return cmd;
+    }
+
+    private static void help() {
+        // This prints out some help
+        HelpFormatter formater = new HelpFormatter();
+
+        formater.printHelp("ExpSVM", options);
+        System.exit(0);
+    }
+
+
 
 }

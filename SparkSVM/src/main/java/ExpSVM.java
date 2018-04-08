@@ -21,7 +21,7 @@ public class ExpSVM {
         System.out.println("Hello Spark");
         SparkConf conf = new SparkConf().setAppName("Simple Application");
         SparkContext sc = new SparkContext(conf);
-        String path = "file:/home/vibhatha/ds/data/ijcnn1_train_spark.txt";
+        String path = "file:/home/vibhatha/data/sparksvm/ijcnn1/ijcnn1_train_spark.txt";
         JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, path).toJavaRDD();
 
 // Split initial RDD into two... [60% training data, 40% testing data].

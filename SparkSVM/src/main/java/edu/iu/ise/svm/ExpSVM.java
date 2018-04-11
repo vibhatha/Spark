@@ -94,6 +94,53 @@ public class ExpSVM {
         train(sc,training, test);
     }
 
+    public static void task(SparkContext sc, String trainingDataSet, String testingDataSet, int numIterations, double stepSize, double regParam) throws IOException {
+        String datasource = "ijcnn1";
+        String path = "file:"+trainingDataSet; //"file:/home/vibhatha/data/sparksvm/ijcnn1/ijcnn1_train_spark.txt";
+        String test_path = "file:"+testingDataSet;
+        JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, path).toJavaRDD();
+        JavaRDD<LabeledPoint> testdata = MLUtils.loadLibSVMFile(sc, test_path).toJavaRDD();
+
+        ArrayList<LabeledPoint> newrdd = new ArrayList<>();
+
+        LabeledPoint pos = new LabeledPoint(1.0, Vectors.dense(1.0, 0.0, 3.0));
+        Double label = pos.label();
+        Vector features = pos.features();
+        System.out.println(label);
+        System.out.println(features);
+
+        JavaRDD<LabeledPoint> parsedData = data.map(line -> {
+            Double label2 = line.label();
+            Vector feature = line.features();
+            if(label2==-1.0){
+                label2=0.0;
+            }
+            return new LabeledPoint(label2, feature);
+        });
+
+        JavaRDD<LabeledPoint> parsedTestData = testdata.map(line -> {
+            Double label2 = line.label();
+            Vector feature = line.features();
+            if(label2==-1.0){
+                label2=0.0;
+            }
+            return new LabeledPoint(label2, feature);
+        });
+
+
+
+        // Split initial RDD into two... [60% training data, 40% testing data].
+        JavaRDD<LabeledPoint> training = parsedData;
+        training.cache();
+        JavaRDD<LabeledPoint> test = parsedTestData;
+
+        //printRDD(training);
+        //printRDD(test);
+
+        train(sc,training, test, numIterations, stepSize, regParam);
+    }
+
+
     public static void train(SparkContext sc,JavaRDD<LabeledPoint> training, JavaRDD<LabeledPoint> test ) throws IOException {
         // Run training algorithm to build the model.
         int numIterations = 100;
@@ -148,6 +195,62 @@ public class ExpSVM {
 
     }
 
+    public static void train(SparkContext sc,JavaRDD<LabeledPoint> training, JavaRDD<LabeledPoint> test, int numIterations, double stepSize, double regParam) throws IOException {
+        // Run training algorithm to build the model.
+        numIterations = 100;
+        long start_time = System.currentTimeMillis();
+        final SVMModel model = SVMWithSGD.train(training.rdd(), numIterations, stepSize, regParam);
+        //model.clearThreshold();
+
+        long end_time = System.currentTimeMillis();
+        long elapsed_time = end_time - start_time;
+
+
+        String svmModelPath= "model/svm/exp1";
+// Save and load model
+        File file = new File(svmModelPath);
+        if(file.exists()){
+            FileUtils.deleteDirectory(file);
+        }
+
+        model.save(sc, svmModelPath);
+        SVMModel sameModel = SVMModel.load(sc, svmModelPath);
+
+        JavaRDD<Vector> testFeatures = test.map(line -> {
+            Vector feature = line.features();
+            return feature;
+        });
+
+        JavaRDD<Double> testLabels = test.map(line -> {
+            Double label = line.label();
+            return label;
+        });
+
+        JavaRDD<Double> predictions = sameModel.predict(testFeatures);
+
+        // double prediction = sameModel.predict(testFeatures.first());
+
+        List<Double> predictionVals = predictions.collect();
+        List<Double> expectedVals = testLabels.collect();
+        double accuracy = predictionAccuracy(predictionVals, expectedVals);
+        System.out.println("Accuracy : "+accuracy+", Training Time : "+elapsed_time/1000.0 );
+
+        /*System.out.println("Test Labels");
+        System.out.println("===================================");
+        testLabels.foreach(s->{
+            System.out.println(s);
+        });
+
+        System.out.println("Prediction Labels");
+        System.out.println("===================================");
+        predictions.foreach(s->{
+            System.out.println(s);
+        });*/
+
+    }
+
+
+
     public static double  predictionAccuracy(List<Double> predictions, List<Double> tests){
         double acc = 0.0;
         int count = 0;
@@ -179,8 +282,11 @@ public class ExpSVM {
     public static void init(String[] args) {
 
         options.addOption("h", "help", false, "show help.");
-        options.addOption("train", "training data set path", true, "Set training data set .");
-        options.addOption("test", "testing data set path", true, "Set testing data set .");
+        options.addOption("train", "training data set path", true, "Set training data set . ex: -train train_data");
+        options.addOption("test", "testing data set path", true, "Set testing data set . ex: -test test_data");
+        options.addOption("iterations", "iteration number", true, "Set number of iterations . ex: -iterations 100");
+        options.addOption("stepSize", "step size", true, "Set step size . ex: -stepSize 0.01");
+        options.addOption("regParam", "regularization parameter", true, "Set testing data set. ex: -regParam 0.02");
 
     }
 
@@ -207,6 +313,30 @@ public class ExpSVM {
                 // Whatever you want to do with the setting goes here
             } else {
                 log.log(Level.SEVERE, "Missing -test option");
+                help();
+            }
+
+            if (cmd.hasOption("iterations")) {
+                log.log(Level.INFO, "Iterations -iterations=" + cmd.getOptionValue("iterations"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -iterations option");
+                help();
+            }
+
+            if (cmd.hasOption("stepSize")) {
+                log.log(Level.INFO, "Step Size -stepSize=" + cmd.getOptionValue("stepSize"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -stepSize option");
+                help();
+            }
+
+            if (cmd.hasOption("regParam")) {
+                log.log(Level.INFO, "Regularization Parameter -regParam=" + cmd.getOptionValue("regParam"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -regParam option");
                 help();
             }
 

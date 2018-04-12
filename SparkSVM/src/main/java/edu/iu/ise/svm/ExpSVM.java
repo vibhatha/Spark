@@ -193,7 +193,7 @@ public class ExpSVM {
         JavaRDD<LabeledPoint> parsedData = data.map(line -> {
             Double label2 = line.label();
             Vector feature = line.features();
-            if(label2==-1.0){
+            if(label2==-1.0 || label2==2.0){
                 label2=0.0;
             }
             return new LabeledPoint(label2, feature);
@@ -202,7 +202,7 @@ public class ExpSVM {
         JavaRDD<LabeledPoint> parsedTestData = testdata.map(line -> {
             Double label2 = line.label();
             Vector feature = line.features();
-            if(label2==-1.0){
+            if(label2==-1.0 || label2==2.0){
                 label2=0.0;
             }
             return new LabeledPoint(label2, feature);

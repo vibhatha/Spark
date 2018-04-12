@@ -1,0 +1,1 @@
+$SPARK_HOME/bin/spark-submit --class edu.iu.ise.svm.ExpSVM --master local[2] target/SparkSVM-1.0.0.jar -train ~/data/libsvm/ijcnn1/ijcnn1_train -iterations 1000 -stepSize 0.05 -regParam 0.01 -test ~/data/libsvm/ijcnn1/ijcnn1_test -log logs/log2.txt

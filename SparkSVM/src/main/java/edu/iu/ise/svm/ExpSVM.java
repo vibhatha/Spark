@@ -44,7 +44,20 @@ public class ExpSVM {
         CommandLine cmd = parse(args);
         String trainingDataSet = cmd.getOptionValue("train");
         String testingDataSet = cmd.getOptionValue("test");
-        task(sc, trainingDataSet, testingDataSet);
+        int numIterations = Integer.parseInt(cmd.getOptionValue("iterations"));
+        double stepSize = Double.parseDouble(cmd.getOptionValue("stepSize"));
+        double regParam = Double.parseDouble(cmd.getOptionValue("regParam"));
+        if((cmd.getOptionValue("split"))!=null){
+            double splitRatio = Double.parseDouble(cmd.getOptionValue("split"));
+            System.out.println("Split Ratio: " + splitRatio);
+            ArrayList<JavaRDD<LabeledPoint>> dataList = dataSplit(trainingDataSet, sc, splitRatio);
+            JavaRDD<LabeledPoint> training = dataList.get(0);
+            JavaRDD<LabeledPoint> testing = dataList.get(1);
+            task(sc, training, testing, numIterations, stepSize, regParam);
+        }else{
+            task(sc, trainingDataSet, testingDataSet, numIterations, stepSize, regParam);
+        }
+
 
     }
 
@@ -139,6 +152,54 @@ public class ExpSVM {
 
         train(sc,training, test, numIterations, stepSize, regParam);
     }
+
+
+    public static void task(SparkContext sc, JavaRDD<LabeledPoint> trainingDataSet, JavaRDD<LabeledPoint> testingDataSet, int numIterations, double stepSize, double regParam) throws IOException {
+        String datasource = "ijcnn1";
+        String path = "file:"+trainingDataSet; //"file:/home/vibhatha/data/sparksvm/ijcnn1/ijcnn1_train_spark.txt";
+        String test_path = "file:"+testingDataSet;
+        JavaRDD<LabeledPoint> data = trainingDataSet;
+        JavaRDD<LabeledPoint> testdata = testingDataSet;
+
+        ArrayList<LabeledPoint> newrdd = new ArrayList<>();
+
+        LabeledPoint pos = new LabeledPoint(1.0, Vectors.dense(1.0, 0.0, 3.0));
+        Double label = pos.label();
+        Vector features = pos.features();
+        System.out.println(label);
+        System.out.println(features);
+
+        JavaRDD<LabeledPoint> parsedData = data.map(line -> {
+            Double label2 = line.label();
+            Vector feature = line.features();
+            if(label2==-1.0){
+                label2=0.0;
+            }
+            return new LabeledPoint(label2, feature);
+        });
+
+        JavaRDD<LabeledPoint> parsedTestData = testdata.map(line -> {
+            Double label2 = line.label();
+            Vector feature = line.features();
+            if(label2==-1.0){
+                label2=0.0;
+            }
+            return new LabeledPoint(label2, feature);
+        });
+
+
+
+        // Split initial RDD into two... [60% training data, 40% testing data].
+        JavaRDD<LabeledPoint> training = parsedData;
+        training.cache();
+        JavaRDD<LabeledPoint> test = parsedTestData;
+
+        //printRDD(training);
+        //printRDD(test);
+
+        train(sc,training, test, numIterations, stepSize, regParam);
+    }
+
 
 
     public static void train(SparkContext sc,JavaRDD<LabeledPoint> training, JavaRDD<LabeledPoint> test ) throws IOException {
@@ -287,6 +348,9 @@ public class ExpSVM {
         options.addOption("iterations", "iteration number", true, "Set number of iterations . ex: -iterations 100");
         options.addOption("stepSize", "step size", true, "Set step size . ex: -stepSize 0.01");
         options.addOption("regParam", "regularization parameter", true, "Set testing data set. ex: -regParam 0.02");
+        options.addOption("split", "Data splitting ratio", true, "Training and Testing data splitting. ex: -split 0.8 (80% of training and 20% of testing)");
+        options.getOption("test").setOptionalArg(true);
+        options.getOption("split").setOptionalArg(true);
 
     }
 
@@ -296,6 +360,8 @@ public class ExpSVM {
         CommandLine cmd = null;
         try {
             cmd = parser.parse(options, args);
+
+
 
             if (cmd.hasOption("h"))
                 help();
@@ -311,9 +377,6 @@ public class ExpSVM {
             if (cmd.hasOption("test")) {
                 log.log(Level.INFO, "Testing data set -test=" + cmd.getOptionValue("test"));
                 // Whatever you want to do with the setting goes here
-            } else {
-                log.log(Level.SEVERE, "Missing -test option");
-                help();
             }
 
             if (cmd.hasOption("iterations")) {
@@ -340,6 +403,11 @@ public class ExpSVM {
                 help();
             }
 
+            if (cmd.hasOption("split")) {
+                log.log(Level.INFO, "Split Parameter -split=" + cmd.getOptionValue("split"));
+                // Whatever you want to do with the setting goes here
+            }
+
         } catch (ParseException e) {
             log.log(Level.SEVERE, "Failed to parse comand line properties", e);
             help();
@@ -354,6 +422,17 @@ public class ExpSVM {
 
         formater.printHelp("ExpSVM", options);
         System.exit(0);
+    }
+
+    public static ArrayList<JavaRDD<LabeledPoint>> dataSplit(String path, SparkContext sc, double ratio){
+        JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, path).toJavaRDD();
+        ArrayList<JavaRDD<LabeledPoint>> list = new ArrayList<>();
+        JavaRDD<LabeledPoint> training = data.sample(false, ratio, 11L);
+        training.cache();
+        JavaRDD<LabeledPoint> test = data.subtract(training);
+        list.add(training);
+        list.add(test);
+        return list;
     }
 
 

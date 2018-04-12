@@ -1,0 +1,35 @@
+===============================================================================
+Experiment Started :Wed Apr 11 21:13:06 EDT 2018
+Training File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_train
+Iterations: 1000
+Step Size: 0.05
+Regularization Parameter: 0.01
+Splitting Ratio: 0.5
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 11 21:15:15 EDT 2018
+Training File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_train
+Iterations: 1000
+Step Size: 0.05
+Regularization Parameter: 0.01
+Splitting Ratio: 0.5
+Accuracy : 90.14003673094582, Training Time : 5.558
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 11 21:15:58 EDT 2018
+Training File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_train
+Iterations: 1000
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_test
+Accuracy : 90.49955834723721, Training Time : 5.776
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 11 21:17:04 EDT 2018
+Training File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_train
+Iterations: 1000
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_test
+Accuracy : 90.49955834723721, Training Time : 5.932
+===============================================================================

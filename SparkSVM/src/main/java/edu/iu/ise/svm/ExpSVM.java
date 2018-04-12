@@ -2,6 +2,7 @@ package edu.iu.ise.svm; /**
  * Created by vibhatha on 7/11/17.
  */
 
+import edu.iu.ise.svm.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
@@ -33,6 +34,9 @@ public class ExpSVM {
     private static final Logger log = Logger.getLogger(ExpSVM.class.getName());
     private String[] args = null;
     private static Options options = new Options();
+    private static String LOG_PATH = "logs";
+    private static String LOG_FILE = "log.txt";
+    private static String LOG_DEST = "";
 
     public static void main(String [] args) throws IOException {
         long start_time = System.currentTimeMillis();
@@ -47,7 +51,23 @@ public class ExpSVM {
         int numIterations = Integer.parseInt(cmd.getOptionValue("iterations"));
         double stepSize = Double.parseDouble(cmd.getOptionValue("stepSize"));
         double regParam = Double.parseDouble(cmd.getOptionValue("regParam"));
+
+        if((cmd.getOptionValue("log"))!=null){
+            LOG_DEST = cmd.getOptionValue("log");
+        }else{
+            Util.mkdir(LOG_PATH);
+            LOG_DEST = LOG_PATH+"/"+LOG_FILE;
+        }
+
+        Util.appendLogs(LOG_DEST,"===============================================================================");
+        Util.appendLogs(LOG_DEST,"Experiment Started :"+ new Date().toString());
+        Util.appendLogs(LOG_DEST,"Training File: " + cmd.getOptionValue("train") );
+        Util.appendLogs(LOG_DEST,"Iterations: " + cmd.getOptionValue("iterations") );
+        Util.appendLogs(LOG_DEST,"Step Size: " + cmd.getOptionValue("stepSize") );
+        Util.appendLogs(LOG_DEST,"Regularization Parameter: " + cmd.getOptionValue("regParam") );
+
         if((cmd.getOptionValue("split"))!=null){
+            Util.appendLogs(LOG_DEST,"Splitting Ratio: " + cmd.getOptionValue("split") );
             double splitRatio = Double.parseDouble(cmd.getOptionValue("split"));
             System.out.println("Split Ratio: " + splitRatio);
             ArrayList<JavaRDD<LabeledPoint>> dataList = dataSplit(trainingDataSet, sc, splitRatio);
@@ -55,10 +75,11 @@ public class ExpSVM {
             JavaRDD<LabeledPoint> testing = dataList.get(1);
             task(sc, training, testing, numIterations, stepSize, regParam);
         }else{
+            Util.appendLogs(LOG_DEST,"Testing File: " + cmd.getOptionValue("test") );
             task(sc, trainingDataSet, testingDataSet, numIterations, stepSize, regParam);
         }
 
-
+        Util.appendLogs(LOG_DEST,"===============================================================================");
     }
 
     public static void task(SparkContext sc, String trainingDataSet, String testingDataSet) throws IOException {
@@ -236,36 +257,23 @@ public class ExpSVM {
         JavaRDD<Double> predictions = sameModel.predict(testFeatures);
 
        // double prediction = sameModel.predict(testFeatures.first());
-
         List<Double> predictionVals = predictions.collect();
         List<Double> expectedVals = testLabels.collect();
         double accuracy = predictionAccuracy(predictionVals, expectedVals);
-        System.out.println("Accuracy : "+accuracy+", Training Time : "+elapsed_time/1000.0 );
-
-        /*System.out.println("Test Labels");
-        System.out.println("===================================");
-        testLabels.foreach(s->{
-            System.out.println(s);
-        });
-
-        System.out.println("Prediction Labels");
-        System.out.println("===================================");
-        predictions.foreach(s->{
-            System.out.println(s);
-        });*/
+        String record = "Accuracy : "+accuracy+", Training Time : "+elapsed_time/1000.0;
+        System.out.println(record);
+        Util.appendLogs(LOG_DEST,record);
 
     }
 
     public static void train(SparkContext sc,JavaRDD<LabeledPoint> training, JavaRDD<LabeledPoint> test, int numIterations, double stepSize, double regParam) throws IOException {
         // Run training algorithm to build the model.
-        numIterations = 100;
+
         long start_time = System.currentTimeMillis();
         final SVMModel model = SVMWithSGD.train(training.rdd(), numIterations, stepSize, regParam);
-        //model.clearThreshold();
 
         long end_time = System.currentTimeMillis();
         long elapsed_time = end_time - start_time;
-
 
         String svmModelPath= "model/svm/exp1";
 // Save and load model
@@ -294,7 +302,9 @@ public class ExpSVM {
         List<Double> predictionVals = predictions.collect();
         List<Double> expectedVals = testLabels.collect();
         double accuracy = predictionAccuracy(predictionVals, expectedVals);
-        System.out.println("Accuracy : "+accuracy+", Training Time : "+elapsed_time/1000.0 );
+        String record = "Accuracy : "+accuracy+", Training Time : "+elapsed_time/1000.0;
+        System.out.println(record);
+        Util.appendLogs(LOG_DEST,record);
 
         /*System.out.println("Test Labels");
         System.out.println("===================================");
@@ -349,8 +359,10 @@ public class ExpSVM {
         options.addOption("stepSize", "step size", true, "Set step size . ex: -stepSize 0.01");
         options.addOption("regParam", "regularization parameter", true, "Set testing data set. ex: -regParam 0.02");
         options.addOption("split", "Data splitting ratio", true, "Training and Testing data splitting. ex: -split 0.8 (80% of training and 20% of testing)");
+        options.addOption("log", "Logging functionality", true, "Log file path addition. ex: logs/log1.txt");
         options.getOption("test").setOptionalArg(true);
         options.getOption("split").setOptionalArg(true);
+        options.getOption("log").setOptionalArg(true);
 
     }
 
@@ -360,8 +372,6 @@ public class ExpSVM {
         CommandLine cmd = null;
         try {
             cmd = parser.parse(options, args);
-
-
 
             if (cmd.hasOption("h"))
                 help();
@@ -405,6 +415,10 @@ public class ExpSVM {
 
             if (cmd.hasOption("split")) {
                 log.log(Level.INFO, "Split Parameter -split=" + cmd.getOptionValue("split"));
+                // Whatever you want to do with the setting goes here
+            }
+            if (cmd.hasOption("log")) {
+                log.log(Level.INFO, "Log Parameter -log=" + cmd.getOptionValue("log"));
                 // Whatever you want to do with the setting goes here
             }
 

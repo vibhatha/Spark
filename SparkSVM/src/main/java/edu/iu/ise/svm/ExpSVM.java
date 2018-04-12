@@ -37,12 +37,14 @@ public class ExpSVM {
     private static String LOG_PATH = "logs";
     private static String LOG_FILE = "log.txt";
     private static String LOG_DEST = "";
+    private static String MODEL_PATH = "model/svm/exp1";
 
     public static void main(String [] args) throws IOException {
         long start_time = System.currentTimeMillis();
         System.out.println("Hello Spark");
         SparkConf conf = new SparkConf().setAppName("Simple Application");
         SparkContext sc = new SparkContext(conf);
+        sc.setLogLevel("ERROR");
 
         init(args);
         CommandLine cmd = parse(args);
@@ -51,6 +53,7 @@ public class ExpSVM {
         int numIterations = Integer.parseInt(cmd.getOptionValue("iterations"));
         double stepSize = Double.parseDouble(cmd.getOptionValue("stepSize"));
         double regParam = Double.parseDouble(cmd.getOptionValue("regParam"));
+        MODEL_PATH = cmd.getOptionValue("model");
 
         if((cmd.getOptionValue("log"))!=null){
             LOG_DEST = cmd.getOptionValue("log");
@@ -88,14 +91,6 @@ public class ExpSVM {
         String test_path = "file:"+testingDataSet;
         JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, path).toJavaRDD();
         JavaRDD<LabeledPoint> testdata = MLUtils.loadLibSVMFile(sc, test_path).toJavaRDD();
-
-        ArrayList<LabeledPoint> newrdd = new ArrayList<>();
-
-        LabeledPoint pos = new LabeledPoint(1.0, Vectors.dense(1.0, 0.0, 3.0));
-        Double label = pos.label();
-        Vector features = pos.features();
-        System.out.println(label);
-        System.out.println(features);
 
         JavaRDD<LabeledPoint> parsedData = data.map(line -> {
             Double label2 = line.label();
@@ -135,13 +130,6 @@ public class ExpSVM {
         JavaRDD<LabeledPoint> data = MLUtils.loadLibSVMFile(sc, path).toJavaRDD();
         JavaRDD<LabeledPoint> testdata = MLUtils.loadLibSVMFile(sc, test_path).toJavaRDD();
 
-        ArrayList<LabeledPoint> newrdd = new ArrayList<>();
-
-        LabeledPoint pos = new LabeledPoint(1.0, Vectors.dense(1.0, 0.0, 3.0));
-        Double label = pos.label();
-        Vector features = pos.features();
-        System.out.println(label);
-        System.out.println(features);
 
         JavaRDD<LabeledPoint> parsedData = data.map(line -> {
             Double label2 = line.label();
@@ -208,16 +196,12 @@ public class ExpSVM {
             return new LabeledPoint(label2, feature);
         });
 
-
-
         // Split initial RDD into two... [60% training data, 40% testing data].
         JavaRDD<LabeledPoint> training = parsedData;
         training.cache();
         JavaRDD<LabeledPoint> test = parsedTestData;
-
         //printRDD(training);
         //printRDD(test);
-
         train(sc,training, test, numIterations, stepSize, regParam);
     }
 
@@ -275,7 +259,7 @@ public class ExpSVM {
         long end_time = System.currentTimeMillis();
         long elapsed_time = end_time - start_time;
 
-        String svmModelPath= "model/svm/exp1";
+        String svmModelPath= MODEL_PATH;
 // Save and load model
         File file = new File(svmModelPath);
         if(file.exists()){
@@ -360,6 +344,7 @@ public class ExpSVM {
         options.addOption("regParam", "regularization parameter", true, "Set testing data set. ex: -regParam 0.02");
         options.addOption("split", "Data splitting ratio", true, "Training and Testing data splitting. ex: -split 0.8 (80% of training and 20% of testing)");
         options.addOption("log", "Logging functionality", true, "Log file path addition. ex: logs/log1.txt");
+        options.addOption("model", "Model Save functionality", true, "Model file path addition. ex: model/model-1");
         options.getOption("test").setOptionalArg(true);
         options.getOption("split").setOptionalArg(true);
         options.getOption("log").setOptionalArg(true);
@@ -410,6 +395,14 @@ public class ExpSVM {
                 // Whatever you want to do with the setting goes here
             } else {
                 log.log(Level.SEVERE, "Missing -regParam option");
+                help();
+            }
+
+            if (cmd.hasOption("model")) {
+                log.log(Level.INFO, "Model Saving Path Parameter -model=" + cmd.getOptionValue("model"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -model option");
                 help();
             }
 

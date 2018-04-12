@@ -38,6 +38,8 @@ public class ExpSVM {
     private static String LOG_FILE = "log.txt";
     private static String LOG_DEST = "";
     private static String MODEL_PATH = "model/svm/exp1";
+    private static String STATS_DEST = "stats/";
+    private static String EXPERIMENT_NAME="";
 
     public static void main(String [] args) throws IOException {
         long start_time = System.currentTimeMillis();
@@ -53,8 +55,11 @@ public class ExpSVM {
         int numIterations = Integer.parseInt(cmd.getOptionValue("iterations"));
         double stepSize = Double.parseDouble(cmd.getOptionValue("stepSize"));
         double regParam = Double.parseDouble(cmd.getOptionValue("regParam"));
+        EXPERIMENT_NAME = cmd.getOptionValue("name");
         MODEL_PATH = cmd.getOptionValue("model");
-
+        STATS_DEST += cmd.getOptionValue("stats");
+        Util.saveStats(STATS_DEST, EXPERIMENT_NAME+",");
+        Util.saveStats(STATS_DEST, trainingDataSet+",");
         if((cmd.getOptionValue("log"))!=null){
             LOG_DEST = cmd.getOptionValue("log");
         }else{
@@ -68,9 +73,13 @@ public class ExpSVM {
         Util.appendLogs(LOG_DEST,"Iterations: " + cmd.getOptionValue("iterations") );
         Util.appendLogs(LOG_DEST,"Step Size: " + cmd.getOptionValue("stepSize") );
         Util.appendLogs(LOG_DEST,"Regularization Parameter: " + cmd.getOptionValue("regParam") );
+        Util.saveStats(STATS_DEST,cmd.getOptionValue("iterations")+",");
+        Util.saveStats(STATS_DEST,cmd.getOptionValue("stepSize")+",");
+        Util.saveStats(STATS_DEST,cmd.getOptionValue("regParam")+",");
 
         if((cmd.getOptionValue("split"))!=null){
             Util.appendLogs(LOG_DEST,"Splitting Ratio: " + cmd.getOptionValue("split") );
+            Util.saveStats(STATS_DEST,cmd.getOptionValue("split")+",");
             double splitRatio = Double.parseDouble(cmd.getOptionValue("split"));
             System.out.println("Split Ratio: " + splitRatio);
             ArrayList<JavaRDD<LabeledPoint>> dataList = dataSplit(trainingDataSet, sc, splitRatio);
@@ -79,6 +88,7 @@ public class ExpSVM {
             task(sc, training, testing, numIterations, stepSize, regParam);
         }else{
             Util.appendLogs(LOG_DEST,"Testing File: " + cmd.getOptionValue("test") );
+            Util.saveStats(STATS_DEST,cmd.getOptionValue("test")+",");
             task(sc, trainingDataSet, testingDataSet, numIterations, stepSize, regParam);
         }
 
@@ -289,6 +299,8 @@ public class ExpSVM {
         String record = "Accuracy : "+accuracy+", Training Time : "+elapsed_time/1000.0;
         System.out.println(record);
         Util.appendLogs(LOG_DEST,record);
+        Util.saveStats(STATS_DEST,String.valueOf(accuracy)+",");
+        Util.saveStats(STATS_DEST,String.valueOf(elapsed_time/1000.0)+"\n");
 
         /*System.out.println("Test Labels");
         System.out.println("===================================");
@@ -345,6 +357,8 @@ public class ExpSVM {
         options.addOption("split", "Data splitting ratio", true, "Training and Testing data splitting. ex: -split 0.8 (80% of training and 20% of testing)");
         options.addOption("log", "Logging functionality", true, "Log file path addition. ex: logs/log1.txt");
         options.addOption("model", "Model Save functionality", true, "Model file path addition. ex: model/model-1");
+        options.addOption("stats", "Statistics Save functionality", true, "Statistics file path addition. (File format we use is csv) ex: stats/stats-1.csv");
+        options.addOption("name", "Experiment Naming functionality", true, "Name the experiment with dataset id  ex: webspam-first-experiment");
         options.getOption("test").setOptionalArg(true);
         options.getOption("split").setOptionalArg(true);
         options.getOption("log").setOptionalArg(true);
@@ -405,6 +419,23 @@ public class ExpSVM {
                 log.log(Level.SEVERE, "Missing -model option");
                 help();
             }
+
+            if (cmd.hasOption("stats")) {
+                log.log(Level.INFO, "Statistics Saving Path Parameter -stats=" + cmd.getOptionValue("stats"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -stats option");
+                help();
+            }
+
+            if (cmd.hasOption("name")) {
+                log.log(Level.INFO, "Name Parameter -name=" + cmd.getOptionValue("name"));
+                // Whatever you want to do with the setting goes here
+            } else {
+                log.log(Level.SEVERE, "Missing -name option");
+                help();
+            }
+
 
             if (cmd.hasOption("split")) {
                 log.log(Level.INFO, "Split Parameter -split=" + cmd.getOptionValue("split"));

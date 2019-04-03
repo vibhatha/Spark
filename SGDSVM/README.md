@@ -1,3 +1,9 @@
+# SGD Based SVM [Part of Twister2 Research](https://twister2.gitbook.io/twister2/)
+
+## Status
+
+Ready for Alpha Testing
+
 #Sample Run
 
 ```bash

@@ -13,6 +13,7 @@ import org.apache.commons.cli.*;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,12 +56,16 @@ public class SVMRunner {
 
     private static String expName ="";
 
+    private static double dataLoadingTime = 0;
+
+    private static double trainingTime = 0;
+
+    private final static double N2S = 1000000000;
+
 
     public static void main(String[] args) {
-
         initialize();
         CommandLine cmd = parse(args);
-
         String trainingDataSet = cmd.getOptionValue("train");
         String testingDataSet = cmd.getOptionValue("test");
         iterations = Integer.parseInt(cmd.getOptionValue("iterations"));
@@ -71,19 +76,29 @@ public class SVMRunner {
         FileUtils.mkdir(statsDest);
         statsDest += cmd.getOptionValue("stats");
         LOG.info("Stats Save Path : " + statsDest);
-
         sc = new JavaSparkContext();
+        long t1 = 0;
+        t1 = System.nanoTime();
         DistributedDataLoader distributedDataLoader = new DistributedDataLoader(trainingDataSet, features, samples,
                 parallelism, sc);
         distributedDataLoader.prepare();
         XyAll = distributedDataLoader.getData();
+        dataLoadingTime = (double)(System.nanoTime() - t1) / N2S;
+        t1 = System.nanoTime();
         SVMTrainMap svmTrainMap = new SVMTrainMap(XyAll, features, samples, alpha, iterations);
         svmTrainMap.map();
         wRdd = svmTrainMap.getwRdd();
         SVMReduce svmReduce = new SVMReduce(wRdd, parallelism);
         svmReduce.reduce();
         wFinal = svmReduce.getW();
+        trainingTime = (double)(System.nanoTime() - t1) / N2S;
         LOG.info(String.format("WReduced  Final : %s ", Arrays.toString(wFinal)));
+        try {
+            FileUtils.logSave(statsDest, features, samples, parallelism, dataLoadingTime, trainingTime);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOG.info(String.format("Data Loading Time : %f, Training Time : %f", dataLoadingTime, trainingTime));
     }
 
 

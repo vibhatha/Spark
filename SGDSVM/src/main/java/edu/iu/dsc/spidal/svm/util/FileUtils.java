@@ -1,6 +1,9 @@
 package edu.iu.dsc.spidal.svm.util;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public final class FileUtils {
 
@@ -21,5 +24,20 @@ public final class FileUtils {
         }
 
         return status;
+    }
+
+    public static void logSave(String filePath, int features, int samples, int parallelism, double dataLoadingTime, double trainingTime) throws IOException {
+        String s = "";
+        s = String.format("%d,%d,%d,%f,%f", parallelism, samples, features, dataLoadingTime, trainingTime);
+        File file = new File(filePath);
+        FileWriter fileWriter = new FileWriter(file, true);
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(s);
+            bufferedWriter.newLine();
+        } finally {
+            bufferedWriter.close();
+        }
     }
 }

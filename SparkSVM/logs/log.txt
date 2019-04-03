@@ -33,3 +33,57 @@ Regularization Parameter: 0.01
 Testing File: /home/vibhatha/data/libsvm/ijcnn1/ijcnn1_test
 Accuracy : 90.49955834723721, Training Time : 5.932
 ===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 03 11:10:32 EDT 2019
+Training File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.tr
+Iterations: 10
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.t
+Accuracy : 90.49955834723721, Training Time : 0.832
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 03 11:11:45 EDT 2019
+Training File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.tr
+Iterations: 10
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.t
+Accuracy : 90.49955834723721, Training Time : 0.883
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 03 11:16:56 EDT 2019
+Training File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.tr
+Iterations: 10
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.t
+Accuracy : 90.49955834723721, Training Time : 0.851
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 03 11:18:04 EDT 2019
+Training File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.tr
+Iterations: 10
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.t
+Accuracy : 90.49955834723721, Training Time : 0.819
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 03 11:18:42 EDT 2019
+Training File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.tr
+Iterations: 10
+Step Size: 0.05
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.t
+Accuracy : 90.49955834723721, Training Time : 0.89
+===============================================================================
+===============================================================================
+Experiment Started :Wed Apr 03 11:19:22 EDT 2019
+Training File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.tr
+Iterations: 100
+Step Size: 0.001
+Regularization Parameter: 0.01
+Testing File: /home/vibhatha/data/svm/ijcnn1/ijcnn1.t
+Accuracy : 90.49955834723721, Training Time : 0.603
+===============================================================================

@@ -1,4 +1,4 @@
-/**
+package edu.iu.old; /**
  * Created by vibhatha on 7/11/17.
  */
 import org.apache.spark.SparkConf;
@@ -14,7 +14,7 @@ import org.apache.spark.mllib.regression.LabeledPoint;
 import org.apache.spark.mllib.util.MLUtils;
 
 
-public class ExpSVM {
+public class ExpSVMSpark {
 
     public static void main(String [] args){
         long start_time = System.currentTimeMillis();

@@ -58,6 +58,7 @@ public class ExpSVM {
         EXPERIMENT_NAME = cmd.getOptionValue("name");
         MODEL_PATH = cmd.getOptionValue("model");
         STATS_DEST += cmd.getOptionValue("stats");
+        System.out.println("Stats Save Path : " + STATS_DEST);
         Util.saveStats(STATS_DEST, EXPERIMENT_NAME+",");
         Util.saveStats(STATS_DEST, trainingDataSet+",");
         if((cmd.getOptionValue("log"))!=null){
@@ -458,7 +459,7 @@ public class ExpSVM {
         // This prints out some help
         HelpFormatter formater = new HelpFormatter();
 
-        formater.printHelp("ExpSVM", options);
+        formater.printHelp("SparkSVM", options);
         System.exit(0);
     }
 

@@ -87,6 +87,7 @@ public class Util {
             }
 
             // true = append file
+            System.out.println(file.getAbsoluteFile());
             fw = new FileWriter(file.getAbsoluteFile(), true);
             bw = new BufferedWriter(fw);
 
